@@ -24,6 +24,7 @@
             v-model="password"
             class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring focus:border-blue-400"
             required
+            autocomplete="current-password"
           />
         </div>
 

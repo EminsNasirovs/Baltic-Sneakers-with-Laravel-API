@@ -44,11 +44,15 @@ export default {
   async login(credentials) {
     try {
       const response = await api.post('/api/login', credentials);  // Send login request to the server
-      if (response.data.token) {
+
+      // Ensure that the response contains the token
+      if (response.data && response.data.token) {
         // Store the authentication token in localStorage if the response contains a token
         localStorage.setItem('auth_token', response.data.token);
+        return response.data.user;  // Return the user data on successful login
+      } else {
+        throw new Error('No token returned from the server');
       }
-      return response.data.user;  // Return user data on successful login
     } catch (error) {
       console.error('Login failed', error);  // Log any errors that occur during login
       throw error;  // Rethrow error to be handled by the calling function
@@ -84,3 +88,4 @@ export default {
     }
   }
 };
+  
