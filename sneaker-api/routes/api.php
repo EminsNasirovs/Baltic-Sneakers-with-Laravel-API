@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\OrderController;
 use App\Http\Controllers\API\ProfileController;
-use App\Http\Controllers\API\FavouriteController;
 
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
@@ -21,7 +20,4 @@ Route::middleware('auth:sanctum')->group(function () {
     
     // Profile route (access to logged-in user's profile)
     Route::get('user/profile', [ProfileController::class, 'show']);
-    Route::get('/favourites', [FavouriteController::class, 'index']);
-    Route::post('/favourites', [FavouriteController::class, 'store']);
-    Route::delete('/favourites/{id}', [FavouriteController::class, 'destroy']);
 });
