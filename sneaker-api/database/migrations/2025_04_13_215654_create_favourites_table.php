@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('favourites', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->unsignedBigInteger('sneaker_id'); // this refers to the sneaker's ID in mokky.dev
+            $table->unsignedBigInteger('sneaker_id'); // Mokky sneaker id
             $table->timestamps();
-
-            $table->unique(['user_id', 'favouritable_id', 'favouritable_type']);
+        
+            $table->unique(['user_id', 'sneaker_id']); // prevent duplicates
         });
     }
 

@@ -1,24 +1,38 @@
 <script setup>
 import axios from 'axios'
 import CardList from '../components/CardList.vue'
-
 import { inject, reactive, ref, onMounted } from 'vue'
 import debounce from 'lodash/debounce'
 
 const { cart, addToCart, removeFromCart } = inject('cart')
-
 const items = inject('items')
+
+// Auth state
+const isAuthenticated = ref(!!localStorage.getItem('auth_token'))
+const showLoginModal = ref(false)
+
 const toggleFavourite = async (item) => {
+  if (!isAuthenticated.value) {
+    showLoginModal.value = true
+    return
+  }
+
   try {
+    const token = localStorage.getItem('auth_token')
+    
     if (!item.isFavourite) {
-      const { data } = await axios.post(`https://6aebf3b8569a6036.mokky.dev/favourites`, {
-        sneakerId: item.id,
-        item,
-      })
+      const { data } = await axios.post(
+        `http://127.0.0.1:8000/api/favourites`, 
+        { sneakerId: item.id },
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
       item.isFavourite = true
       item.favouriteID = data.id
     } else {
-      await axios.delete(`https://6aebf3b8569a6036.mokky.dev/favourites/${item.favouriteID}`)
+      await axios.delete(
+        `http://127.0.0.1:8000/api/favourites/${item.favouriteID}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
       item.isFavourite = false
       item.favouriteID = null
     }
@@ -28,12 +42,19 @@ const toggleFavourite = async (item) => {
 }
 
 const fetchFavourites = async () => {
+  if (!isAuthenticated.value) return
+  
   try {
-    const { data: favourites } = await axios.get(`https://6aebf3b8569a6036.mokky.dev/favourites`)
+    const token = localStorage.getItem('auth_token')
+    const { data: favourites } = await axios.get(
+      `http://127.0.0.1:8000/api/favourites`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    )
+
     items.value = items.value.map((item) => {
-      const favourite = favourites.find((fav) => fav.sneakerId === item.id)
-      return favourite
-        ? { ...item, isFavourite: true, favouriteID: favourite.id }
+      const fav = favourites.find(f => f.sneaker_id === item.id)
+      return fav
+        ? { ...item, isFavourite: true, favouriteID: fav.id }
         : { ...item, isFavourite: false, favouriteID: null }
     })
   } catch (error) {
@@ -47,13 +68,16 @@ const fetchItems = async () => {
     if (filters.searchQuery) {
       params.title = `*${filters.searchQuery}*`
     }
+    
     const { data } = await axios.get(`https://6aebf3b8569a6036.mokky.dev/items`, { params })
+    
     items.value = data.map((obj) => ({
       ...obj,
       isFavourite: false,
       favouriteID: null,
       isAdded: cart.value.some((cartItem) => cartItem.id === obj.id),
     }))
+    
     await fetchFavourites()
   } catch (error) {
     console.error('Error fetching items:', error)
@@ -78,6 +102,7 @@ const onChangeSearchInput = debounce((event) => {
 const toggleCartItem = (item) => {
   item.isAdded ? removeFromCart(item) : addToCart(item)
 }
+
 onMounted(async () => {
   await fetchItems()
 })
@@ -85,10 +110,37 @@ onMounted(async () => {
 
 <template>
   <div>
+    <!-- Login Modal -->
+    <div v-if="showLoginModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div class="bg-white p-6 rounded-lg max-w-sm w-full">
+        <h3 class="text-xl font-bold mb-4">Login Required</h3>
+        <p class="mb-4">Please log in to save favorites!</p>
+        <div class="flex justify-end gap-2">
+          <button 
+            @click="showLoginModal = false" 
+            class="px-4 py-2 border rounded-lg"
+          >
+            Cancel
+          </button>
+          <router-link 
+            to="/login" 
+            class="px-4 py-2 bg-green-500 text-white rounded-lg"
+            @click="showLoginModal = false"
+          >
+            Go to Login
+          </router-link>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
     <div class="flex justify-between items-center">
       <h2 class="text-3xl font-bold mb-8">All Shoes</h2>
       <div class="flex gap-4">
-        <select @change="onChangeSelect" class="py-2.3 px-3 border rounded-2xl outline-none">
+        <select 
+          @change="onChangeSelect" 
+          class="py-2.3 px-3 border rounded-2xl outline-none"
+        >
           <option value="title">By name</option>
           <option value="price">By price (cheaper first)</option>
           <option value="-price">By price (expensive first)</option>
@@ -103,8 +155,13 @@ onMounted(async () => {
         </div>
       </div>
     </div>
+    
     <div class="mt-10">
-      <CardList :items="items" @add-to-favourite="toggleFavourite" @add-to-cart="toggleCartItem" />
+      <CardList 
+        :items="items" 
+        @add-to-favourite="toggleFavourite" 
+        @add-to-cart="toggleCartItem" 
+      />
     </div>
   </div>
 </template>

@@ -11,8 +11,8 @@ class FavouriteController extends Controller
 {
     public function index()
     {
-        $user = Auth::user();
-        return response()->json($user->favourites);
+        $favourites = Favourite::where('user_id', Auth::id())->get();
+        return response()->json($favourites);
     }
 
     public function store(Request $request)

@@ -11,15 +11,10 @@ class Favourite extends Model
 
     protected $fillable = [
         'user_id',
-        'favouritable_id',
-        'favouritable_type',
+        'sneaker_id',
     ];
 
-    // Polymorphic relationship to any "favouritable" model
-    public function favouritable()
-    {
-        return $this->morphTo();
-    }
+    
 
     // Relationship to User
     public function user()
