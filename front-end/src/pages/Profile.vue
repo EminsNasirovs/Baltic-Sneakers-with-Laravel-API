@@ -1,42 +1,52 @@
 <template>
-  <div class="profile-container">
-    <!-- Loading state -->
-    <div v-if="loading" class="loading-indicator">
+  <div class="max-w-xl mx-auto my-10 p-8 bg-white rounded-2xl shadow-md">
+
+    <div v-if="loading" class="text-center text-gray-500">
       <p>Loading your profile...</p>
     </div>
 
-    <!-- Error state -->
-    <div v-else-if="error" class="error-message">
+    <div v-else-if="error" class="text-center text-red-500">
       <p>{{ error }}</p>
-      <button @click="fetchUserProfile" class="retry-button">Retry</button>
+      <button
+        @click="fetchUserProfile"
+        class="mt-4 px-4 py-2 bg-lime-500 text-white rounded-xl hover:bg-lime-600 active:bg-lime-700 transition"
+      >
+        Retry
+      </button>
     </div>
 
-    <!-- Success state -->
-    <div v-else-if="user" class="profile-content">
-      <h1 class="profile-title">Welcome, {{ user.name }}</h1>
-      
-      <div class="profile-details">
-        <div class="detail-item">
-          <span class="detail-label">Email:</span>
-          <span class="detail-value">{{ user.email }}</span>
+
+    <div v-else-if="user">
+      <h1 class="text-3xl font-bold text-center mb-6 text-lime-600">
+        Welcome, {{ user.name }}
+      </h1>
+
+      <div class="space-y-4">
+        <div class="flex justify-between items-center border-b pb-2">
+          <span class="text-gray-600 font-semibold">Email:</span>
+          <span class="text-gray-800">{{ user.email }}</span>
         </div>
-        
-        <div class="detail-item">
-          <span class="detail-label">Member Since:</span>
-          <span class="detail-value">{{ formatDate(user.created_at) }}</span>
+
+        <div class="flex justify-between items-center border-b pb-2">
+          <span class="text-gray-600 font-semibold">Member Since:</span>
+          <span class="text-gray-800">{{ formatDate(user.created_at) }}</span>
         </div>
       </div>
 
-      <button @click="logout" class="logout-button">Log Out</button>
+      <button
+        @click="logout"
+        class="mt-8 w-full py-3 bg-green-500 hover:bg-red-600 active:bg-red-700 text-white rounded-xl transition"
+      >
+        Log Out
+      </button>
     </div>
 
-    <!-- Empty state (shouldn't normally show) -->
-    <div v-else class="empty-state">
+   
+    <div v-else class="text-center text-gray-400">
       <p>No profile data available</p>
     </div>
   </div>
 </template>
-
 <script>
 import axios from 'axios';
 
@@ -119,80 +129,3 @@ export default {
 };
 </script>
 
-<style scoped>
-.profile-container {
-  max-width: 600px;
-  margin: 2rem auto;
-  padding: 2rem;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.loading-indicator {
-  text-align: center;
-  padding: 2rem;
-  color: #666;
-}
-
-.error-message {
-  text-align: center;
-  padding: 2rem;
-  color: #d32f2f;
-}
-
-.retry-button {
-  margin-top: 1rem;
-  padding: 0.5rem 1rem;
-  background: #1976d2;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.profile-title {
-  color: #333;
-  margin-bottom: 1.5rem;
-  text-align: center;
-}
-
-.profile-details {
-  margin: 2rem 0;
-}
-
-.detail-item {
-  display: flex;
-  margin-bottom: 1rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid #eee;
-}
-
-.detail-label {
-  font-weight: bold;
-  width: 120px;
-  color: #555;
-}
-
-.detail-value {
-  flex: 1;
-}
-
-.logout-button {
-  display: block;
-  width: 100%;
-  padding: 0.75rem;
-  background: #d32f2f;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-top: 2rem;
-}
-
-.empty-state {
-  text-align: center;
-  padding: 2rem;
-  color: #666;
-}
-</style>

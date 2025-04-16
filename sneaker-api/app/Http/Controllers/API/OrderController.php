@@ -1,40 +1,31 @@
 <?php
 
+
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\Controller;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Controller;
 
 class OrderController extends Controller
 {
+    public function index()
+    {
+        return Order::where('user_id', Auth::id())->get();
+    }
+
     public function store(Request $request)
     {
         $request->validate([
             'items' => 'required|array',
-            'total_price' => 'required|numeric',
+            'total_price' => 'required|integer',
         ]);
 
-        /** @var \App\Models\User $user */
-        $user = Auth::user();
-        
-        $order = Order::create([
-            'user_id' => $user->id, 
+        return Order::create([
+            'user_id' => Auth::id(),
             'items' => $request->items,
             'total_price' => $request->total_price,
         ]);
-
-        return response()->json($order, 201);
-    }
-
-    public function index(Request $request)
-    {
-        /** @var \App\Models\User $user */
-        $user = $request->user();
-        
-        return response()->json(
-            $user->orders()->latest()->get()
-        );
     }
 }

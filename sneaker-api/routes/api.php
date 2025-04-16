@@ -16,8 +16,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
     
     // Orders routes
-    Route::post('orders', [OrderController::class, 'store']);
-    Route::get('orders', [OrderController::class, 'index']);
+    Route::get('/orders', [OrderController::class, 'index']);
+    Route::post('/orders', [OrderController::class, 'store']);
     
     // Profile route (access to logged-in user's profile)
     Route::get('user/profile', [ProfileController::class, 'show']);

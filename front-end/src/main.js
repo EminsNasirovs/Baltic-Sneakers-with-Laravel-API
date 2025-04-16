@@ -10,13 +10,16 @@ import Favourites from './pages/Favourites.vue'
 import Login from './pages/Login.vue'
 import Register from './pages/Register.vue'
 import Profile from './pages/Profile.vue'
+import Orders from './pages/Orders.vue'
 
 const routes = [
   { path: '/', name: 'Home', component: Home },
   { path: '/favourites', name: 'Favourites', component: Favourites },
   { path: '/login', name: 'Login', component: Login},
   { path: '/register', name: 'Register', component: Register},
-  { path: '/profile', name: 'Profile', component: Profile}
+  { path: '/profile', name: 'Profile', component: Profile},
+  { path: '/:pathMatch(.*)*', redirect: '/' }, 
+  { path: '/orders',  name: 'Orders', component: Orders }
 ]
 
 const router = createRouter({
