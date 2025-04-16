@@ -6,13 +6,12 @@
     </div>
 
     <div v-else-if="error" class="text-center text-red-500">
-      <p>{{ error }}</p>
-      <button
-        @click="fetchUserProfile"
-        class="mt-4 px-4 py-2 bg-lime-500 text-white rounded-xl hover:bg-lime-600 active:bg-lime-700 transition"
-      >
-        Retry
-      </button>
+      <p class="mb-4">{{ error }}</p>
+      <a
+        href="/login"
+        class="mt-4  ml-1 px-4 py-2 bg-lime-500 text-white rounded-xl hover:bg-lime-600 active:bg-lime-700 transition"
+        >
+      Login</a>
     </div>
 
 
