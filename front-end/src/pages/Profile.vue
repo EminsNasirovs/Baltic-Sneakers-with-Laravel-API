@@ -69,7 +69,7 @@ export default {
       try {
         const token = localStorage.getItem('auth_token');
         if (!token) {
-          throw new Error('No authentication token found');
+          throw new Error('Please log in to view your profile');
         }
 
         const response = await axios.get('/api/user/profile', {
@@ -78,7 +78,7 @@ export default {
             'Cache-Control': 'no-cache',
           },
           params: {
-            timestamp: Date.now() // Prevent caching
+            timestamp: Date.now() 
           }
         });
 
@@ -86,7 +86,6 @@ export default {
           throw new Error('Empty response from server');
         }
 
-        // Assign the user data from response.data.data
         this.user = response.data.data;
       } catch (error) {
         console.error('Profile fetch error:', error);

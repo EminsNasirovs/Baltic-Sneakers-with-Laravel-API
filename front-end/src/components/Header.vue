@@ -26,17 +26,25 @@ const emit = defineEmits(['openDrawer'])
         <span>{{ totalPrice }}</span>
         <img class="w-3" src="/eiroicon.svg" />
       </li>
-
+      <router-link to="/orders">
+        <li class="flex items-center cursor-pointer gap-3 text-gray-500 hover:text-black">
+          <img class="w-5" src="/orders-icon.svg" alt="Cart" />
+          <span>Orders</span>
+        </li>
+        </router-link>
       <router-link to="/favourites">
         <li class="flex items-center cursor-pointer gap-3 text-gray-500 hover:text-black">
           <img src="/heart.svg" alt="Cart" />
           <span>Favourites</span>
-        </li></router-link
-      >
+        </li>
+        </router-link>
+      <router-link to="/profile">
       <li class="flex items-center cursor-pointer gap-3 text-gray-500 hover:text-black">
         <img src="/profile.svg" alt="Cart" />
         <span>Profile</span>
       </li>
+      </router-link>
+
     </ul>
   </header>
 </template>
