@@ -17,7 +17,7 @@ class ProfileController extends Controller
 {
     return response()->json([
         'data' => $request->user(),
-        'timestamp' => now() // Debug value
+        'timestamp' => now() 
     ]);
 }
 }
