@@ -14,8 +14,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // User profile route (no need to add 'auth:sanctum' again)
     Route::get('user', [AuthController::class, 'user']);
     Route::post('logout', [AuthController::class, 'logout']);
-    
-    // Orders routes
+    Route::middleware('auth:sanctum')->put('/user/update', [ProfileController::class, 'update']);
     Route::get('/orders', [OrderController::class, 'index']);
     Route::post('/orders', [OrderController::class, 'store']);
     
