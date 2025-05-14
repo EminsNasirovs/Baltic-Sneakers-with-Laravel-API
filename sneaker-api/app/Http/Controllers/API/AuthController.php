@@ -18,14 +18,14 @@ class AuthController extends Controller
             'password' => 'required|string|min:8',
         ]);
 
-        // Create a new user
+       
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
 
-        // Return a success message
+       
         return response()->json(['message' => 'Registration successful'], 201);
     }
 
